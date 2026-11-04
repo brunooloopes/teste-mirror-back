@@ -10,13 +10,13 @@ jobs:
         with:
           fetch-depth: 0
           
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
+          
       - name: Push to GitLab
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
           git remote add gitlab git@gitlab.com:mv-corp/command-center-dcaf/pocs/teste-01.git
           git push gitlab --mirror
